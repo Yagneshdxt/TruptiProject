@@ -1,0 +1,34 @@
+﻿@using CoreEntities
+@model CoreEntities.DocumentLinks
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("postDocument", "Default", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <p>Branch Id </p> @Html.TextBoxFor(e => e.BranchId)
+    <br />
+    <p>
+        Academic Year Id
+    </p>
+    @Html.TextBoxFor(e => e.AcademicYearId)
+    <br />
+    <p>
+        Academic Year Id
+    </p>
+    @Html.TextBoxFor(e => e.DocumentTypeId)
+    <br />
+    <p>
+        Upload document
+    </p>
+    <input type="file" name="DocumentPath" />
+
+
+    <input type="submit" value="Submit" />
+
+}
+
