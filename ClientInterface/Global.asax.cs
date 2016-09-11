@@ -14,9 +14,8 @@ namespace ClientInterface
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-            MvcRouteConfig.RegisterRoutes(RouteTable.Routes);
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            
+            MvcRouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }
 }

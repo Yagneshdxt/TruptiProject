@@ -1,4 +1,6 @@
-﻿using CoreEntities;
+﻿using ClientInterface.MappingConfig;
+using ClientInterface.Models;
+using CoreEntities;
 using DataAccessLayer.Repository;
 using System;
 using System.Collections.Generic;
@@ -22,8 +24,9 @@ namespace ClientInterface.Controllers
             _UOW = new UnitOfWork();
         }
 
+
         [HttpPost, ActionName("UploadDocument")]
-        public IHttpActionResult UploadDocument(DocumentLinks documentLnk) {
+        public IHttpActionResult UploadDocument(DocumentViewModel documentViewModel) {
 
             HttpRequestMessage request = this.Request;
             if (!request.Content.IsMimeMultipartContent())
@@ -34,18 +37,23 @@ namespace ClientInterface.Controllers
             var httpRequest = System.Web.HttpContext.Current.Request;
             if (httpRequest.Files.Count > 0)
             {
-                foreach (string file in httpRequest.Files)
+                DocumentLinks doc = new DocumentLinks();
+                AutoMapperConfig.MapDocument_VM();
+                doc = AutoMapper.Mapper.Map<DocumentLinks>(documentViewModel);
+                doc.DocumentPath = "";
+                /*foreach (string file in httpRequest.Files)
                 {
                     var postedFile = httpRequest.Files[file];
                     var filePath = System.Web.HttpContext.Current.Server.MapPath("~/UploadedFiles/" + DateTime.Now.Ticks.ToString() + Path.GetExtension(postedFile.FileName));
                     postedFile.SaveAs(filePath);
                     // NOTE: To store in memory use postedFile.InputStream
                     //documentLnk.
-                    documentLnk.DocumentPath = filePath;
-                    _UOW.DocumentLinkRepository.Insert(documentLnk);
+                    doc = AutoMapper.Mapper.Map<DocumentLinks>(documentViewModel);
+                    doc.DocumentPath = filePath;
+                    _UOW.DocumentLinkRepository.Insert(doc);
                     _UOW.Save();
-                }
-                return Ok<DocumentLinks>(documentLnk);
+                }*/
+                return Ok<DocumentLinks>(doc);
                 //return Request.CreateResponse(HttpStatusCode.Created);
             }
 

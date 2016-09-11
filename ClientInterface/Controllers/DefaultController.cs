@@ -1,6 +1,9 @@
-﻿using CoreEntities;
+﻿using ClientInterface.MappingConfig;
+using ClientInterface.Models;
+using CoreEntities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,7 +15,10 @@ namespace ClientInterface.Controllers
         // GET: Default
         public ActionResult Index()
         {
-            DocumentLinks model = new DocumentLinks();
+            DocumentLinks docLnk = new DocumentLinks();
+            AutoMapperConfig.MapDocument_VM();
+            DocumentViewModel model;
+            model = AutoMapper.Mapper.Map<DocumentViewModel>(docLnk);
             return View(model);
         }
 
@@ -89,7 +95,28 @@ namespace ClientInterface.Controllers
         }
 
         [HttpPost]
-        public ActionResult postDocument(DocumentLinks model) {
+        public ActionResult postDocument(DocumentViewModel model) {
+
+            if (model.WebDocumentUploaded.ContentLength <= 0) {
+                ModelState.AddModelError("file Required", "File not found");
+            }
+
+            using (Stream inputStream = model.WebDocumentUploaded.InputStream)
+            {
+                MemoryStream memoryStream = inputStream as MemoryStream;
+                if (memoryStream == null)
+                {
+                    memoryStream = new MemoryStream();
+                    inputStream.CopyTo(memoryStream);
+                }
+                model.documentInByte = memoryStream.ToArray();
+            }
+            model.documentExtension = Path.GetExtension(model.WebDocumentUploaded.FileName);
+
+
+            DocumentLinks doc = new DocumentLinks();
+            AutoMapperConfig.MapDocument_VM();
+            doc = AutoMapper.Mapper.Map<DocumentLinks>(model);
 
             return View("Index",model);
         }

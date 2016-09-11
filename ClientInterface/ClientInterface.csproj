@@ -271,6 +271,7 @@
     </Compile>
     <Compile Include="MappingConfig\AutoMapperConfig.cs" />
     <Compile Include="Models\BranchViewModel.cs" />
+    <Compile Include="Models\DocumentViewModel.cs" />
     <Compile Include="Models\StudentsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
